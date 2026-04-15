@@ -32,3 +32,10 @@ dist-ssr
 
 #cursor
 .cursor
+.agents/*
+.requirements.txt
+.impeccable.md
+
+#python
+__pycache__
+pipeline/venv
