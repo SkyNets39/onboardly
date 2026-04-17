@@ -2,6 +2,10 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 
+interface UserRoleRow {
+  role: "admin" | "employee";
+}
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -9,12 +13,41 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   async function handleLogin() {
-    const { error } = await supabase.auth.signInWithPassword({
+    setError("");
+
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    if (error) setError(error.message);
-    else navigate("/chat");
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    const userId = data.user?.id;
+    if (!userId) {
+      setError("User session not found after login.");
+      return;
+    }
+
+    const { data: roleRow, error: roleError } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", userId)
+      .single<UserRoleRow>();
+
+    if (roleError) {
+      setError("Unable to resolve user role.");
+      return;
+    }
+
+    if (roleRow.role === "admin") {
+      navigate("/admin/dashboard");
+      return;
+    }
+
+    navigate("/chat");
   }
 
   return (

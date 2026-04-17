@@ -3,14 +3,19 @@ import { Loader2, SendHorizonal } from "lucide-react";
 
 import { AIChatBubble } from "@/components/chat/AIChatBubble";
 import { UserChatBubble } from "@/components/chat/UserChatBubble";
-import type { ChatFunctionResponse, ChatMessage, ChatSource } from "@/components/chat/chat-types";
+import type {
+  ChatFunctionResponse,
+  ChatMessage,
+  ChatSource,
+} from "@/components/chat/chat-types";
 import { Button } from "@/components/ui/button";
 
 interface ChatAssistantProps {
   userName: string;
 }
 
-const CHAT_FUNCTION_URL = "https://zbsymtyiuylfytztvyec.supabase.co/functions/v1/chat";
+const CHAT_FUNCTION_URL =
+  "https://zbsymtyiuylfytztvyec.supabase.co/functions/v1/chat";
 const COMPANY_ID = "060d9407-1746-4f6c-aafe-02d5f3e88891";
 
 function normalizeSources(payload: unknown): ChatSource[] {
@@ -40,7 +45,9 @@ function normalizeSources(payload: unknown): ChatSource[] {
   return normalized;
 }
 
-function parseChatFunctionResponse(payload: unknown): ChatFunctionResponse | null {
+function parseChatFunctionResponse(
+  payload: unknown,
+): ChatFunctionResponse | null {
   if (payload === null || typeof payload !== "object") return null;
 
   const candidate = payload as Record<string, unknown>;
@@ -174,17 +181,9 @@ export function ChatAssistant({ userName }: ChatAssistantProps) {
   }
 
   return (
-    <section className="flex flex-col gap-4">
-      <article className="flex min-h-[520px] flex-col overflow-hidden rounded-xl border border-border bg-card">
-        <div className="border-b border-border px-5 py-4">
-          <p className="text-sm font-medium">Assistant Chat</p>
-          <p className="text-sm text-muted-foreground">
-            Ask policy and onboarding questions. Responses are grounded on
-            uploaded HR docs.
-          </p>
-        </div>
-
-        <div className="flex-1 space-y-4 overflow-y-auto px-4 py-4 md:px-5">
+    <section className="flex flex-col gap-4 items-center">
+      <article className="flex h-[650px] w-full max-w-[1250px] flex-col overflow-hidden ">
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4 md:px-5">
           {messages.map((message) =>
             message.role === "assistant" ? (
               <AIChatBubble
@@ -210,7 +209,7 @@ export function ChatAssistant({ userName }: ChatAssistantProps) {
 
         <form
           onSubmit={handleSubmit}
-          className="border-t border-border p-3 md:p-4"
+          className="border border-border border-radius-md p-3 md:p-4"
         >
           <div className="flex gap-2">
             <input

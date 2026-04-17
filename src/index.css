@@ -18,10 +18,9 @@
   --color-teal-forest: #1a8f6e;
 
   /* Neutral */
-  --color-neutral-surface: #f7f9fc;
-  --color-neutral-border: #e8edf5;
-  --color-neutral-muted: #8a97ae;
+  --color-neutral-muted: #d5dadd;
   --color-neutral-text: #1e2a3a;
+  --color-neutral-background: #f8fafc;
 
   /* Semantic */
   --color-warning: #f59e0b;

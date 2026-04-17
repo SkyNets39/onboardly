@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import { UserLayout } from "@/layouts/UserLayout";
+import { AppLayout } from "@/layouts/UserLayout";
 import LoginPage from "@/pages/LoginPage";
 import ChatPage from "@/pages/ChatPage";
-import AdminPage from "@/pages/AdminPage";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdminDocuments from "@/pages/admin/AdminDocuments";
 
 export default function App() {
   return (
@@ -15,16 +16,47 @@ export default function App() {
         <Route
           element={
             <ProtectedRoute>
-              <UserLayout />
+              <AppLayout />
             </ProtectedRoute>
           }
         >
-          <Route path="/chat" element={<ChatPage />} />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute employeeOnly>
+                <ChatPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/admin"
             element={
               <ProtectedRoute adminOnly>
-                <AdminPage />
+                <Navigate to="/admin/dashboard" replace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/documents"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminDocuments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute adminOnly>
+                <Navigate to="/admin/dashboard" replace />
               </ProtectedRoute>
             }
           />

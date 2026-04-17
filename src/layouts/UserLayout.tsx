@@ -1,19 +1,28 @@
+import type { ReactNode } from "react";
 import { Outlet } from "react-router-dom";
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { UserSidebar } from "@/layouts/UserSidebar";
-import { UserTopbar } from "@/layouts/UserTopbar";
+import { useAuth } from "@/hooks/useAuth";
+import { AppSidebar } from "@/layouts/UserSidebar";
+import { AppTopbar } from "@/layouts/UserTopbar";
 
-export function UserLayout() {
+interface AppLayoutProps {
+  role?: "admin" | "employee";
+  children?: ReactNode;
+}
+
+export function AppLayout({ role, children }: AppLayoutProps) {
+  const { profile } = useAuth();
+  const resolvedRole = role ?? profile?.role ?? "employee";
 
   return (
     <SidebarProvider>
-      <UserSidebar />
+      <AppSidebar />
 
       <SidebarInset className="bg-background">
-        <UserTopbar />
-        <main className="p-4 md:p-6">
-          <Outlet />
+        <AppTopbar role={resolvedRole} />
+        <main className="p-4 md:p-6 h-full bg-neutral-background">
+          {children ?? <Outlet />}
         </main>
       </SidebarInset>
     </SidebarProvider>

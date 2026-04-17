@@ -1,5 +1,12 @@
-import { LogOut, MessageCircle, Shield } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import type { ComponentType } from "react";
+import {
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  MessageCircle,
+  Users,
+} from "lucide-react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,39 +22,35 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
-import { cn } from "@/lib/utils";
 
 interface NavigationItem {
   label: string;
   to: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
 }
 
-const BASE_NAV_ITEMS: NavigationItem[] = [
+const EMPLOYEE_NAV_ITEMS: NavigationItem[] = [
   { label: "Chat", to: "/chat", icon: MessageCircle },
 ];
 
-const ADMIN_NAV_ITEM: NavigationItem = {
-  label: "Admin",
-  to: "/admin",
-  icon: Shield,
-};
+const ADMIN_NAV_ITEMS: NavigationItem[] = [
+  { label: "Dashboard", to: "/admin/dashboard", icon: LayoutDashboard },
+  { label: "Documents", to: "/admin/documents", icon: FileText },
+  { label: "Users", to: "/admin/users", icon: Users },
+];
 
-export function UserSidebar() {
+export function AppSidebar() {
   const { profile, isAdmin, signOut } = useAuth();
-  const navigationItems = isAdmin
-    ? [...BASE_NAV_ITEMS, ADMIN_NAV_ITEM]
-    : BASE_NAV_ITEMS;
+  const location = useLocation();
+  const navigationItems = isAdmin ? ADMIN_NAV_ITEMS : EMPLOYEE_NAV_ITEMS;
+  const homeLink = isAdmin ? "/admin/dashboard" : "/chat";
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="border-b border-sidebar-border px-4 py-3 h-18 flex flex-row items-center">
-        <Link to="/chat" className="flex items-center gap-2">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-primary/12 text-primary">
-            <MessageCircle className="size-4" />
-          </div>
+      <SidebarHeader className="  px-4 py-3 h-18 flex flex-row items-center">
+        <Link to={homeLink} className="flex items-center">
           <div className="grid flex-1 text-left text-lg leading-tight">
-            <span className="truncate font-semibold">Onboardly</span>
+            <span className="truncate font-semibold">OnBoardly</span>
           </div>
         </Link>
       </SidebarHeader>
@@ -59,18 +62,17 @@ export function UserSidebar() {
             <SidebarMenu>
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton asChild tooltip={item.label}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={item.label}
+                    isActive={location.pathname === item.to}
+                    className="data-[active=true]:bg-brand-sky data-[active=true]:text-brand-deep"
+                  >
                     <NavLink
                       to={item.to}
-                      className={({ isActive }) =>
-                        cn(
-                          "w-full",
-                          isActive &&
-                            "bg-sidebar-accent text-sidebar-accent-foreground",
-                        )
-                      }
+                      className="w-full rounded-md transition-colors"
                     >
-                      <item.icon />
+                      <item.icon className="size-4" />
                       <span>{item.label}</span>
                     </NavLink>
                   </SidebarMenuButton>
