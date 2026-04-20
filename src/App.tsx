@@ -6,6 +6,7 @@ import LoginPage from "@/pages/LoginPage";
 import ChatPage from "@/pages/ChatPage";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminDocuments from "@/pages/admin/AdminDocuments";
+import { AdminUsers } from "@/pages/admin/AdminUsers";
 
 export default function App() {
   return (
@@ -56,7 +57,7 @@ export default function App() {
             path="/admin/users"
             element={
               <ProtectedRoute adminOnly>
-                <Navigate to="/admin/dashboard" replace />
+                <AdminUsers />
               </ProtectedRoute>
             }
           />

@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react"
-import { Loader2, Plus, Trash2, Upload } from "lucide-react"
+import { useMemo, useState } from "react";
+import { Loader2, Plus, Trash2, Upload } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,8 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -20,32 +20,34 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { useAuth } from "@/hooks/useAuth"
+} from "@/components/ui/table";
+import { useAuth } from "@/hooks/useAuth";
 import {
   type DocumentRow,
   type DocumentStatus,
   useDeleteDocumentMutation,
   useDocumentsQuery,
   useUploadDocumentMutation,
-} from "@/hooks/queries/useDocuments"
+} from "@/hooks/queries/useDocuments";
 
-function getStatusVariant(status: DocumentStatus): "secondary" | "default" | "destructive" {
-  if (status === "ready") return "default"
-  if (status === "failed") return "destructive"
-  return "secondary"
+function getStatusVariant(
+  status: DocumentStatus,
+): "secondary" | "default" | "destructive" {
+  if (status === "ready") return "default";
+  if (status === "failed") return "destructive";
+  return "secondary";
 }
 
 export default function AdminDocuments() {
-  const { profile } = useAuth()
-  const documentsQuery = useDocumentsQuery()
-  const uploadDocumentMutation = useUploadDocumentMutation()
-  const deleteDocumentMutation = useDeleteDocumentMutation()
-  const [isUploadOpen, setIsUploadOpen] = useState(false)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [documentName, setDocumentName] = useState("")
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const { profile } = useAuth();
+  const documentsQuery = useDocumentsQuery();
+  const uploadDocumentMutation = useUploadDocumentMutation();
+  const deleteDocumentMutation = useDeleteDocumentMutation();
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [documentName, setDocumentName] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const submitDisabled = useMemo(
     () =>
@@ -53,13 +55,18 @@ export default function AdminDocuments() {
       !selectedFile ||
       !documentName.trim() ||
       !profile?.company_id,
-    [documentName, profile?.company_id, selectedFile, uploadDocumentMutation.isPending]
-  )
+    [
+      documentName,
+      profile?.company_id,
+      selectedFile,
+      uploadDocumentMutation.isPending,
+    ],
+  );
 
   async function handleUpload() {
-    if (!selectedFile || !profile?.company_id || !profile.id) return
-    setErrorMessage(null)
-    setSuccessMessage(null)
+    if (!selectedFile || !profile?.company_id || !profile.id) return;
+    setErrorMessage(null);
+    setSuccessMessage(null);
 
     try {
       await uploadDocumentMutation.mutateAsync({
@@ -67,42 +74,47 @@ export default function AdminDocuments() {
         uploadedBy: profile.id,
         file: selectedFile,
         documentName,
-      })
+      });
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Upload failed.")
-      return
+      setErrorMessage(
+        error instanceof Error ? error.message : "Upload failed.",
+      );
+      return;
     }
 
-    setDocumentName("")
-    setSelectedFile(null)
-    setIsUploadOpen(false)
-    setSuccessMessage("Document uploaded and marked as processing.")
+    setDocumentName("");
+    setSelectedFile(null);
+    setIsUploadOpen(false);
+    setSuccessMessage("Document uploaded and marked as processing.");
   }
 
   async function handleDelete(document: DocumentRow) {
-    setErrorMessage(null)
-    setSuccessMessage(null)
+    setErrorMessage(null);
+    setSuccessMessage(null);
 
     try {
       await deleteDocumentMutation.mutateAsync({
         id: document.id,
         filePath: document.file_path,
-      })
+      });
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Delete failed.")
-      return
+      setErrorMessage(
+        error instanceof Error ? error.message : "Delete failed.",
+      );
+      return;
     }
 
-    setSuccessMessage("Document deleted successfully.")
+    setSuccessMessage("Document deleted successfully.");
   }
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-semibold">Document Manager</h2>
           <p className="text-sm text-muted-foreground">
-            Upload and maintain the knowledge documents used by the chat assistant.
+            Upload and maintain the knowledge documents used by the chat
+            assistant.
           </p>
         </div>
 
@@ -117,7 +129,8 @@ export default function AdminDocuments() {
             <DialogHeader>
               <DialogTitle>Upload document</DialogTitle>
               <DialogDescription>
-                Upload to storage first, then create a processing record in the documents table.
+                Upload to storage first, then create a processing record in the
+                documents table.
               </DialogDescription>
             </DialogHeader>
 
@@ -142,16 +155,26 @@ export default function AdminDocuments() {
                   id="document-file"
                   type="file"
                   accept=".pdf,.docx"
-                  onChange={(event) => setSelectedFile(event.target.files?.[0] ?? null)}
+                  onChange={(event) =>
+                    setSelectedFile(event.target.files?.[0] ?? null)
+                  }
                 />
               </div>
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsUploadOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsUploadOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button type="button" onClick={() => void handleUpload()} disabled={submitDisabled}>
+              <Button
+                type="button"
+                onClick={() => void handleUpload()}
+                disabled={submitDisabled}
+              >
                 {uploadDocumentMutation.isPending ? (
                   <>
                     <Loader2 className="size-4 animate-spin" />
@@ -181,7 +204,7 @@ export default function AdminDocuments() {
         </div>
       ) : null}
 
-      <div className="rounded-xl border border-border bg-card">
+      <div className="rounded-xl border bg-(--card)">
         <Table>
           <TableHeader>
             <TableRow>
@@ -195,7 +218,10 @@ export default function AdminDocuments() {
           <TableBody>
             {documentsQuery.isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="text-center text-muted-foreground"
+                >
                   Loading documents...
                 </TableCell>
               </TableRow>
@@ -207,7 +233,10 @@ export default function AdminDocuments() {
               </TableRow>
             ) : !(documentsQuery.data?.length ?? 0) ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="text-center text-muted-foreground"
+                >
                   No documents found.
                 </TableCell>
               </TableRow>
@@ -215,11 +244,17 @@ export default function AdminDocuments() {
               (documentsQuery.data ?? []).map((document) => (
                 <TableRow key={document.id}>
                   <TableCell className="font-medium">{document.name}</TableCell>
-                  <TableCell className="uppercase">{document.file_type}</TableCell>
-                  <TableCell>
-                    <Badge variant={getStatusVariant(document.status)}>{document.status}</Badge>
+                  <TableCell className="uppercase">
+                    {document.file_type}
                   </TableCell>
-                  <TableCell>{new Date(document.created_at).toLocaleString()}</TableCell>
+                  <TableCell>
+                    <Badge variant={getStatusVariant(document.status)}>
+                      {document.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {new Date(document.created_at).toLocaleString()}
+                  </TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="ghost"
@@ -239,5 +274,5 @@ export default function AdminDocuments() {
         </Table>
       </div>
     </section>
-  )
+  );
 }

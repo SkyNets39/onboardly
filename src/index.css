@@ -18,9 +18,20 @@
   --color-teal-forest: #1a8f6e;
 
   /* Neutral */
-  --color-neutral-muted: #d5dadd;
-  --color-neutral-text: #1e2a3a;
-  --color-neutral-background: #f8fafc;
+  --color-neutral-border: #d5dadd;
+  --color-neutral-fore: #1e2a3a;
+  --color-neutral-base: #ffffff;
+  --color-neutral-subtle: #f9f9f9;
+
+  /* App chrome — required for `bg-navbar` / Tailwind color utilities */
+  --color-navbar: var(--color-neutral-base);
+
+  /* Sidebar (shadcn) — align surface with navbar */
+  --color-sidebar-foreground: var(--color-neutral-fore);
+  --color-sidebar-accent: var(--color-brand-sky);
+  --color-sidebar-accent-foreground: var(--color-brand-deep);
+  --color-sidebar-border: var(--color-neutral-border);
+  --color-sidebar-ring: var(--color-brand-core);
 
   /* Semantic */
   --color-warning: #f59e0b;
@@ -29,29 +40,46 @@
 }
 
 :root {
-  --background: #f7f9fc;
-  --foreground: #1e2a3a;
+  --background: var(--color-neutral-subtle);
+  --foreground: var(--color-neutral-fore);
+  --navbar: var(--color-navbar);
 
-  --card: #ffffff;
-  --card-foreground: #1e2a3a;
+  --bot-bubble-background: var(--color-neutral-base);
+  --bot-bubble-foreground: var(--color-neutral-fore);
+  --bot-bubble-border: var(--color-neutral-border);
 
-  --primary: #4f8ef7;
-  --primary-foreground: #ffffff;
+  --bot-profile-background: var(--color-teal-foam);
+  --bot-profile-foreground: var(--color-teal-forest);
+  --bot-profile-border: var(--color-teal-core);
 
-  --secondary: #eaf2ff;
-  --secondary-foreground: #2565cc;
+  --user-bubble-background: var(--color-brand-sky);
+  --user-bubble-foreground: var(--color-brand-deep);
+  --user-bubble-border: var(--color-brand-core);
 
-  --accent: #2dc79a;
-  --accent-foreground: #ffffff;
+  --citation-background: var(--color-neutral-subtle);
+  --citation-foreground: var(--color-neutral-fore);
+  --citation-border: var(--color-neutral-border);
 
-  --muted: #e8edf5;
-  --muted-foreground: #8a97ae;
+  --card: var(--color-neutral-base);
+  --card-foreground: var(--color-neutral-fore);
 
-  --border: #e8edf5;
-  --ring: #4f8ef7;
+  --primary: var(--color-brand-core);
+  --primary-foreground: var(--color-neutral-base);
 
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
+  --secondary: var(--color-brand-sky);
+  --secondary-foreground: var(--color-brand-deep);
+
+  --accent: var(--color-teal-core);
+  --accent-foreground: var(--color-neutral-base);
+
+  --muted: var(--color-brand-sky);
+  --muted-foreground: var(--color-neutral-border);
+
+  --border: var(--color-neutral-border);
+  --ring: var(--color-brand-core);
+
+  --destructive: var(--color-error);
+  --destructive-foreground: var(--color-neutral-base);
 
   --radius: 0.5rem;
 }

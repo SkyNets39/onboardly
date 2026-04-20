@@ -28,13 +28,15 @@ export default function AdminDashboard() {
   const documentsCountQuery = useDocumentsCountQuery();
   const usersCountQuery = useUsersCountQuery();
   const topQuestionsQuery = useTopQuestionsQuery(TOP_QUESTIONS_LIMIT);
-  const suggestedQuestionsQuery = useSuggestedQuestionsQuery(profile?.company_id);
+  const suggestedQuestionsQuery = useSuggestedQuestionsQuery(
+    profile?.company_id,
+  );
   const addSuggestedQuestionMutation = useAddSuggestedQuestionMutation();
   const deleteSuggestedQuestionMutation = useDeleteSuggestedQuestionMutation();
   const [newQuestion, setNewQuestion] = useState("");
-  const [questionErrorMessage, setQuestionErrorMessage] = useState<string | null>(
-    null,
-  );
+  const [questionErrorMessage, setQuestionErrorMessage] = useState<
+    string | null
+  >(null);
 
   const isLoading =
     documentsCountQuery.isLoading ||
@@ -47,7 +49,8 @@ export default function AdminDashboard() {
     topQuestionsQuery.isError;
 
   const suggestedQuestions = suggestedQuestionsQuery.data ?? [];
-  const canAddMoreQuestions = suggestedQuestions.length < MAX_SUGGESTED_QUESTIONS;
+  const canAddMoreQuestions =
+    suggestedQuestions.length < MAX_SUGGESTED_QUESTIONS;
   const isQuestionActionPending =
     addSuggestedQuestionMutation.isPending ||
     deleteSuggestedQuestionMutation.isPending;
@@ -58,7 +61,8 @@ export default function AdminDashboard() {
     isQuestionActionPending;
 
   async function handleAddQuestion() {
-    if (!profile?.company_id || !newQuestion.trim() || !canAddMoreQuestions) return;
+    if (!profile?.company_id || !newQuestion.trim() || !canAddMoreQuestions)
+      return;
 
     setQuestionErrorMessage(null);
 
@@ -97,7 +101,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 p-6">
       <header>
         <h2 className="text-xl font-semibold">Admin Dashboard</h2>
         <p className="text-sm text-muted-foreground">
@@ -178,7 +182,7 @@ export default function AdminDashboard() {
                 {suggestedQuestions.map((question, index) => (
                   <li
                     key={question.id}
-                    className="flex items-start justify-between gap-3 rounded-lg border border-border p-3"
+                    className="flex items-start justify-between gap-3 rounded-lg border border-(--border) p-3"
                   >
                     <p className="text-sm">
                       {index + 1}. {question.content}
@@ -229,40 +233,6 @@ export default function AdminDashboard() {
             <p className="text-xs text-muted-foreground">
               Maximum 5 suggested questions reached.
             </p>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Top employee questions</CardTitle>
-          <CardDescription>
-            Most frequently asked prompts from chat history
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <p className="text-sm text-muted-foreground">
-              Loading top questions...
-            </p>
-          ) : (topQuestionsQuery.data?.length ?? 0) === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              No employee questions yet.
-            </p>
-          ) : (
-            <ol className="space-y-2">
-              {(topQuestionsQuery.data ?? []).map((question) => (
-                <li
-                  key={question.content}
-                  className="rounded-lg border border-border p-3"
-                >
-                  <p className="text-sm">{question.content}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Asked {question.count} times
-                  </p>
-                </li>
-              ))}
-            </ol>
           )}
         </CardContent>
       </Card>

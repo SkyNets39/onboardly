@@ -31,6 +31,8 @@ interface NavigationItem {
 
 const EMPLOYEE_NAV_ITEMS: NavigationItem[] = [
   { label: "Chat", to: "/chat", icon: MessageCircle },
+  { label: "Announcement", to: "/announcement", icon: MessageCircle },
+  { label: "Directory", to: "/directory", icon: MessageCircle },
 ];
 
 const ADMIN_NAV_ITEMS: NavigationItem[] = [

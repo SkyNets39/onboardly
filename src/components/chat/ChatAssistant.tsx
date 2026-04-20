@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Loader2, SendHorizonal } from "lucide-react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Loader2, ArrowUp } from "lucide-react";
 
 import { AIChatBubble } from "@/components/chat/AIChatBubble";
 import { UserChatBubble } from "@/components/chat/UserChatBubble";
@@ -9,6 +9,7 @@ import type {
   ChatSource,
 } from "@/components/chat/chat-types";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface ChatAssistantProps {
   userName: string;
@@ -17,6 +18,11 @@ interface ChatAssistantProps {
 const CHAT_FUNCTION_URL =
   "https://zbsymtyiuylfytztvyec.supabase.co/functions/v1/chat";
 const COMPANY_ID = "060d9407-1746-4f6c-aafe-02d5f3e88891";
+
+/** Single-line visual height (matches previous input). */
+const CHAT_INPUT_MIN_HEIGHT_PX = 40;
+/** Cap growth before scrolling inside the field. */
+const CHAT_INPUT_MAX_HEIGHT_PX = 192;
 
 function normalizeSources(payload: unknown): ChatSource[] {
   if (!Array.isArray(payload)) return [];
@@ -107,12 +113,28 @@ function buildMessageId(): string {
   return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function chatInitialsFromDisplayName(displayName: string): string {
+  const trimmed = displayName.trim();
+  if (!trimmed) return "?";
+  const parts = trimmed.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) {
+    const word = parts[0]!;
+    return word.length === 1
+      ? word.toUpperCase()
+      : (word[0]! + word[1]!).toUpperCase();
+  }
+  const first = parts[0]![0] ?? "";
+  const last = parts[parts.length - 1]![0] ?? "";
+  return (first + last).toUpperCase();
+}
+
 export function ChatAssistant({ userName }: ChatAssistantProps) {
   const [draft, setDraft] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const endRef = useRef<HTMLDivElement | null>(null);
+  const draftInputRef = useRef<HTMLTextAreaElement | null>(null);
   const sessionIdRef = useRef<string>(crypto.randomUUID());
 
   const greeting = useMemo(
@@ -134,6 +156,17 @@ export function ChatAssistant({ userName }: ChatAssistantProps) {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, isSending]);
+
+  useLayoutEffect(() => {
+    const el = draftInputRef.current;
+    if (!el) return;
+    el.style.height = "0px";
+    const next = Math.min(
+      Math.max(el.scrollHeight, CHAT_INPUT_MIN_HEIGHT_PX),
+      CHAT_INPUT_MAX_HEIGHT_PX,
+    );
+    el.style.height = `${next}px`;
+  }, [draft]);
 
   async function submitPrompt(rawPrompt: string): Promise<void> {
     const prompt = rawPrompt.trim();
@@ -180,9 +213,15 @@ export function ChatAssistant({ userName }: ChatAssistantProps) {
     void submitPrompt(draft);
   }
 
+  const canSubmit = Boolean(draft.trim()) && !isSending;
+  const userInitials = useMemo(
+    () => chatInitialsFromDisplayName(userName),
+    [userName],
+  );
+
   return (
-    <section className="flex flex-col gap-4 items-center">
-      <article className="flex h-[650px] w-full max-w-[1250px] flex-col overflow-hidden ">
+    <section className="flex flex-col gap-4 items-center py-6">
+      <article className="flex h-[650px] w-full mx-auto max-w-4xl flex-col overflow-hidden ">
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4 md:px-5">
           {messages.map((message) =>
             message.role === "assistant" ? (
@@ -192,7 +231,11 @@ export function ChatAssistant({ userName }: ChatAssistantProps) {
                 sources={message.sources}
               />
             ) : (
-              <UserChatBubble key={message.id} content={message.content} />
+              <UserChatBubble
+                key={message.id}
+                content={message.content}
+                userInitials={userInitials}
+              />
             ),
           )}
 
@@ -209,26 +252,47 @@ export function ChatAssistant({ userName }: ChatAssistantProps) {
 
         <form
           onSubmit={handleSubmit}
-          className="border border-border border-radius-md p-3 md:p-4"
+          className="border border-border border-neutral-border p-3 px-2 rounded-4xl md:p-3 bg-neutral-base"
         >
-          <div className="flex gap-2">
-            <input
+          <div className="flex items-end gap-2">
+            <textarea
+              ref={draftInputRef}
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key !== "Enter" || event.shiftKey) return;
+                event.preventDefault();
+                if (!draft.trim() || isSending) return;
+                void submitPrompt(draft);
+              }}
               placeholder="Ask a policy or onboarding question..."
-              className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm outline-none ring-0 placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
+              rows={1}
+              aria-label="Message"
+              className={cn(
+                "min-h-10 w-full resize-none overflow-y-auto rounded-lg border-0 bg-background px-3 py-2 text-sm leading-snug shadow-none outline-none ring-0 placeholder:text-muted-foreground",
+              )}
+              style={{
+                minHeight: CHAT_INPUT_MIN_HEIGHT_PX,
+                maxHeight: CHAT_INPUT_MAX_HEIGHT_PX,
+              }}
             />
+
             <Button
+              size="icon-lg"
               type="submit"
-              className="shrink-0"
-              disabled={!draft.trim() || isSending}
+              className={cn(
+                "shrink-0 rounded-full",
+                canSubmit
+                  ? "bg-brand-core text-white hover:bg-brand-deep"
+                  : "bg-muted text-muted-foreground",
+              )}
+              disabled={!canSubmit}
             >
               {isSending ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
-                <SendHorizonal className="size-4" />
+                <ArrowUp className="size-6" />
               )}
-              Send
             </Button>
           </div>
           {errorMessage ? (

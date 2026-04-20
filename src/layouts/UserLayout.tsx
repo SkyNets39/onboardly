@@ -21,7 +21,7 @@ export function AppLayout({ role, children }: AppLayoutProps) {
 
       <SidebarInset className="bg-background">
         <AppTopbar role={resolvedRole} />
-        <main className="p-4 md:p-6 h-full bg-neutral-background">
+        <main className="h-full bg-neutral-subtle">
           {children ?? <Outlet />}
         </main>
       </SidebarInset>

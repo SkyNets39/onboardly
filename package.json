@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "supabase": "npx supabase@latest",
+    "db:push": "npx supabase@latest db push",
+    "functions:deploy:admin-users": "npx supabase@latest functions deploy admin-users"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
@@ -25,6 +28,7 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-icons": "^5.6.0",
     "react-router-dom": "^7.14.0",
     "shadcn": "^4.2.0",
     "table": "^6.9.0",
