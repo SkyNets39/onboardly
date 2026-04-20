@@ -4,39 +4,84 @@
 @import "@fontsource-variable/inter";
 
 @theme {
-  /* Brand — Trust Blue */
-  --color-brand-sky: #eaf2ff;
-  --color-brand-mist: #b3d4ff;
-  --color-brand-core: #4f8ef7;
-  --color-brand-deep: #2565cc;
-  --color-brand-navy: #1a3f80;
+  /* Primary — Trust Blue */
+  --color-primary-50: oklch(96.5% 0.022 250.6);
+  --color-primary-100: oklch(88.2% 0.056 248.4);
+  --color-primary-200: oklch(76.4% 0.108 246.2);
+  --color-primary-300: oklch(63.8% 0.162 244);
+  --color-primary-400: oklch(55.2% 0.196 242.5);
+  --color-primary-500: oklch(47.6% 0.218 241); /* core */
+  --color-primary-600: oklch(39.4% 0.196 239.8);
+  --color-primary-700: oklch(30.8% 0.162 238.6);
+  --color-primary-800: oklch(22% 0.118 237.4);
+  --color-primary-900: oklch(15.4% 0.078 236.2);
 
-  /* Teal — Fresh Teal */
-  --color-teal-foam: #e4faf4;
-  --color-teal-mint: #a3e6d0;
-  --color-teal-core: #2dc79a;
-  --color-teal-forest: #1a8f6e;
+  /* Secondary — Fresh Teal */
+  --color-secondary-50: oklch(96.8% 0.03 175.2);
+  --color-secondary-100: oklch(90.2% 0.072 172.6);
+  --color-secondary-200: oklch(80.6% 0.128 170.4);
+  --color-secondary-300: oklch(70% 0.178 168.8);
+  --color-secondary-400: oklch(62.4% 0.208 167.2);
+  --color-secondary-500: oklch(56.8% 0.224 166); /* core */
+  --color-secondary-600: oklch(46.6% 0.196 165.2);
+  --color-secondary-700: oklch(36.4% 0.158 164.4);
+  --color-secondary-800: oklch(26.2% 0.114 163.6);
+  --color-secondary-900: oklch(18% 0.074 162.8);
+
+  /* Accent — Violet */
+  --color-accent-50: oklch(96.2% 0.024 277.1);
+  --color-accent-100: oklch(88.6% 0.062 277.1);
+  --color-accent-200: oklch(77.4% 0.116 277.1);
+  --color-accent-300: oklch(68% 0.166 277.1);
+  --color-accent-400: oklch(63.2% 0.2 277.1);
+  --color-accent-500: oklch(58.5% 0.233 277.117); /* core — user-defined */
+  --color-accent-600: oklch(50.2% 0.21 277.1);
+  --color-accent-700: oklch(40.8% 0.172 277.1);
+  --color-accent-800: oklch(30.4% 0.126 277.1);
+  --color-accent-900: oklch(20.6% 0.082 277.1);
 
   /* Neutral */
-  --color-neutral-border: #d5dadd;
-  --color-neutral-fore: #1e2a3a;
-  --color-neutral-base: #ffffff;
-  --color-neutral-subtle: #f9f9f9;
+  --color-neutral-50: oklch(98.2% 0.004 248); /* subtle — page bg */
+  --color-neutral-100: oklch(95.6% 0.008 248); /* wash — card bg */
+  --color-neutral-200: oklch(90.4% 0.012 248); /* muted bg */
+  --color-neutral-300: oklch(82.8% 0.016 248); /* border-subtle */
+  --color-neutral-400: oklch(72% 0.018 248); /* border */
+  --color-neutral-500: oklch(58.6% 0.02 248); /* placeholder text */
+  --color-neutral-600: oklch(44.2% 0.022 248); /* secondary text */
+  --color-neutral-700: oklch(32.4% 0.022 248); /* body text */
+  --color-neutral-800: oklch(22.6% 0.02 248); /* heading text */
+  --color-neutral-900: oklch(13.8% 0.016 248); /* rich black */
 
-  /* App chrome — required for `bg-navbar` / Tailwind color utilities */
+  /* Named aliases */
+  --color-neutral-base: oklch(100% 0 0); /* pure white */
+  --color-neutral-subtle: var(--color-neutral-50);
+  --color-neutral-border: var(--color-neutral-100);
+  --color-neutral-fore: var(--color-neutral-800);
+
+  /* App chrome */
   --color-navbar: var(--color-neutral-base);
 
-  /* Sidebar (shadcn) — align surface with navbar */
+  /* Sidebar (shadcn) */
   --color-sidebar-foreground: var(--color-neutral-fore);
-  --color-sidebar-accent: var(--color-brand-sky);
-  --color-sidebar-accent-foreground: var(--color-brand-deep);
+  --color-sidebar-accent: var(--color-primary-50);
+  --color-sidebar-accent-foreground: var(--color-primary-600);
   --color-sidebar-border: var(--color-neutral-border);
-  --color-sidebar-ring: var(--color-brand-core);
+  --color-sidebar-ring: var(--color-primary-500);
 
-  /* Semantic */
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-success: #22c55e;
+  /* Semantic — Warning (Amber) */
+  --color-warning-background: oklch(97.2% 0.028 80);
+  --color-warning: oklch(75.4% 0.168 68.2);
+  --color-warning-foreground: oklch(38.6% 0.112 52.4);
+
+  /* Semantic — Error (Red) */
+  --color-error-background: oklch(96.8% 0.024 20);
+  --color-error: oklch(58.2% 0.228 27.4);
+  --color-error-foreground: oklch(34% 0.148 22.6);
+
+  /* Semantic — Success (Green) */
+  --color-success-background: oklch(96.6% 0.034 152);
+  --color-success: oklch(64.8% 0.196 152.6);
+  --color-success-foreground: oklch(34.2% 0.124 152.4);
 }
 
 :root {
@@ -48,13 +93,13 @@
   --bot-bubble-foreground: var(--color-neutral-fore);
   --bot-bubble-border: var(--color-neutral-border);
 
-  --bot-profile-background: var(--color-teal-foam);
-  --bot-profile-foreground: var(--color-teal-forest);
-  --bot-profile-border: var(--color-teal-core);
+  --bot-profile-background: var(--color-secondary-50);
+  --bot-profile-foreground: var(--color-secondary-700);
+  --bot-profile-border: var(--color-secondary-500);
 
-  --user-bubble-background: var(--color-brand-sky);
-  --user-bubble-foreground: var(--color-brand-deep);
-  --user-bubble-border: var(--color-brand-core);
+  --user-bubble-background: var(--color-primary-50);
+  --user-bubble-foreground: var(--color-primary-600);
+  --user-bubble-border: var(--color-primary-500);
 
   --citation-background: var(--color-neutral-subtle);
   --citation-foreground: var(--color-neutral-fore);
@@ -63,23 +108,41 @@
   --card: var(--color-neutral-base);
   --card-foreground: var(--color-neutral-fore);
 
-  --primary: var(--color-brand-core);
+  --primary: var(--color-primary-500);
   --primary-foreground: var(--color-neutral-base);
 
-  --secondary: var(--color-brand-sky);
-  --secondary-foreground: var(--color-brand-deep);
+  --secondary: var(--color-primary-50);
+  --secondary-foreground: var(--color-primary-600);
 
-  --accent: var(--color-teal-core);
+  --accent: var(--color-accent-500);
   --accent-foreground: var(--color-neutral-base);
 
-  --muted: var(--color-brand-sky);
+  --muted: var(--color-primary-50);
   --muted-foreground: var(--color-neutral-border);
 
   --border: var(--color-neutral-border);
-  --ring: var(--color-brand-core);
+  --ring: var(--color-primary-500);
 
   --destructive: var(--color-error);
   --destructive-foreground: var(--color-neutral-base);
+
+  --badge-background-secondary: var(--color-secondary-50);
+  --badge-foreground-secondary: var(--color-secondary-600);
+
+  --badge-background-accent: var(--color-accent-50);
+  --badge-foreground-accent: var(--color-accent-600);
+
+  --warning: var(--color-warning);
+  --warning-foreground: var(--color-warning-foreground);
+  --warning-background: var(--color-warning-background);
+
+  --error: var(--color-error);
+  --error-foreground: var(--color-error-foreground);
+  --error-background: var(--color-error-background);
+
+  --success: var(--color-success);
+  --success-foreground: var(--color-success-foreground);
+  --success-background: var(--color-success-background);
 
   --radius: 0.5rem;
 }

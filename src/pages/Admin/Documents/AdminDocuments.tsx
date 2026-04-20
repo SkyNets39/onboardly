@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
-import { Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { useEffect } from "react";
+import { Loader2, Plus, RefreshCw, Trash2, Upload } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,91 +22,44 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAuth } from "@/hooks/useAuth";
-import {
-  type DocumentRow,
-  type DocumentStatus,
-  useDeleteDocumentMutation,
-  useDocumentsQuery,
-  useUploadDocumentMutation,
-} from "@/hooks/queries/useDocuments";
 
-function getStatusVariant(
-  status: DocumentStatus,
-): "secondary" | "default" | "destructive" {
-  if (status === "ready") return "default";
-  if (status === "failed") return "destructive";
-  return "secondary";
-}
+import {
+  getDocumentStatusLabel,
+  getDocumentStatusVariant,
+} from "./documentStatusVariant";
+import { useAdminDocuments } from "./useAdminDocuments";
+import { formatMonthDateYear } from "@/utils/formatDate";
 
 export default function AdminDocuments() {
-  const { profile } = useAuth();
-  const documentsQuery = useDocumentsQuery();
-  const uploadDocumentMutation = useUploadDocumentMutation();
-  const deleteDocumentMutation = useDeleteDocumentMutation();
-  const [isUploadOpen, setIsUploadOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [documentName, setDocumentName] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const {
+    documentsQuery,
+    isUploading,
+    isDeleting,
+    isSyncing,
+    isUploadOpen,
+    setIsUploadOpen,
+    setSelectedFile,
+    documentName,
+    setDocumentName,
+    errorMessage,
+    successMessage,
+    submitDisabled,
+    handleUpload,
+    handleDelete,
+    handleSync,
+  } = useAdminDocuments();
 
-  const submitDisabled = useMemo(
-    () =>
-      uploadDocumentMutation.isPending ||
-      !selectedFile ||
-      !documentName.trim() ||
-      !profile?.company_id,
-    [
-      documentName,
-      profile?.company_id,
-      selectedFile,
-      uploadDocumentMutation.isPending,
-    ],
-  );
-
-  async function handleUpload() {
-    if (!selectedFile || !profile?.company_id || !profile.id) return;
-    setErrorMessage(null);
-    setSuccessMessage(null);
-
-    try {
-      await uploadDocumentMutation.mutateAsync({
-        companyId: profile.company_id,
-        uploadedBy: profile.id,
-        file: selectedFile,
-        documentName,
-      });
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Upload failed.",
-      );
-      return;
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
     }
+  }, [errorMessage]);
 
-    setDocumentName("");
-    setSelectedFile(null);
-    setIsUploadOpen(false);
-    setSuccessMessage("Document uploaded and marked as processing.");
-  }
-
-  async function handleDelete(document: DocumentRow) {
-    setErrorMessage(null);
-    setSuccessMessage(null);
-
-    try {
-      await deleteDocumentMutation.mutateAsync({
-        id: document.id,
-        filePath: document.file_path,
-      });
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Delete failed.",
-      );
-      return;
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
     }
-
-    setSuccessMessage("Document deleted successfully.");
-  }
+  }, [successMessage]);
 
   return (
     <section className="space-y-6 p-6">
@@ -120,7 +74,7 @@ export default function AdminDocuments() {
 
         <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2">
+            <Button className="gap-2 cursor-pointer border-rounded">
               <Plus className="size-4" />
               Upload document
             </Button>
@@ -175,7 +129,7 @@ export default function AdminDocuments() {
                 onClick={() => void handleUpload()}
                 disabled={submitDisabled}
               >
-                {uploadDocumentMutation.isPending ? (
+                {isUploading ? (
                   <>
                     <Loader2 className="size-4 animate-spin" />
                     Uploading...
@@ -192,19 +146,7 @@ export default function AdminDocuments() {
         </Dialog>
       </div>
 
-      {errorMessage ? (
-        <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">
-          {errorMessage}
-        </div>
-      ) : null}
-
-      {successMessage ? (
-        <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-700">
-          {successMessage}
-        </div>
-      ) : null}
-
-      <div className="rounded-xl border bg-(--card)">
+      <div className="rounded-xl border border-neutral-border bg-(--card)">
         <Table>
           <TableHeader>
             <TableRow>
@@ -248,24 +190,39 @@ export default function AdminDocuments() {
                     {document.file_type}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getStatusVariant(document.status)}>
-                      {document.status}
+                    <Badge variant={getDocumentStatusVariant(document.status)}>
+                      {getDocumentStatusLabel(document.status)}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    {new Date(document.created_at).toLocaleString()}
+                    {formatMonthDateYear(document.created_at)}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="gap-2 text-destructive hover:text-destructive"
-                      disabled={deleteDocumentMutation.isPending}
-                      onClick={() => void handleDelete(document)}
-                    >
-                      <Trash2 className="size-4" />
-                      Delete
-                    </Button>
+                    <div className="inline-flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="gap-2 cursor-pointer"
+                        disabled={isSyncing || document.status === "ready"}
+                        onClick={() => void handleSync(document)}
+                        aria-label="Sync document"
+                      >
+                        {isSyncing ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <RefreshCw className="size-4" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="gap-2 hover:text-error-foreground cursor-pointer"
+                        disabled={isDeleting}
+                        onClick={() => void handleDelete(document)}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))

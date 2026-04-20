@@ -418,3 +418,9 @@ enabled = true
 verify_jwt = true
 import_map = "./functions/admin-users/deno.json"
 entrypoint = "./functions/admin-users/index.ts"
+
+[functions.documents-sync]
+enabled = true
+verify_jwt = false
+import_map = "./functions/documents-sync/deno.json"
+entrypoint = "./functions/documents-sync/index.ts"

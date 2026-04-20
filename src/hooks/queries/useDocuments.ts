@@ -13,16 +13,24 @@ export interface DocumentRow {
   created_at: string
 }
 
-interface UploadDocumentArgs {
+export interface UploadDocumentArgs {
   companyId: string
   uploadedBy: string
   file: File
   documentName: string
 }
 
-interface DeleteDocumentArgs {
+export interface DeleteDocumentArgs {
   id: string
   filePath: string
+}
+
+export interface SyncDocumentArgs {
+  documentId: string
+}
+
+export interface SyncDocumentResult {
+  mode: "webhook" | "queued"
 }
 
 export const documentsQueryKey = ["documents"] as const
@@ -135,6 +143,61 @@ export function useDeleteDocumentMutation() {
 
       const { error: deleteError } = await supabase.from("documents").delete().eq("id", id)
       if (deleteError) throw new Error("Unable to delete document row.")
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: documentsQueryKey })
+      await queryClient.invalidateQueries({ queryKey: ["documents-count"] })
+    },
+  })
+}
+
+function getInvokeErrorMessage(error: { message: string }, data: unknown): string {
+  if (
+    data &&
+    typeof data === "object" &&
+    "error" in data &&
+    typeof (data as { error: unknown }).error === "string"
+  ) {
+    return (data as { error: string }).error
+  }
+  return error.message
+}
+
+export function useSyncDocumentMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ documentId }: SyncDocumentArgs): Promise<SyncDocumentResult> => {
+      const { data, error } = await supabase.functions.invoke<{
+        ok?: boolean
+        error?: string
+        mode?: "webhook" | "queued"
+      }>("documents-sync", {
+        body: { action: "sync", document_id: documentId },
+      })
+
+      if (error) {
+        throw new Error(getInvokeErrorMessage(error, data))
+      }
+
+      if (
+        data &&
+        typeof data === "object" &&
+        "error" in data &&
+        typeof data.error === "string"
+      ) {
+        throw new Error(data.error)
+      }
+
+      return {
+        mode:
+          data &&
+          typeof data === "object" &&
+          "mode" in data &&
+          (data.mode === "webhook" || data.mode === "queued")
+            ? data.mode
+            : "queued",
+      }
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: documentsQueryKey })

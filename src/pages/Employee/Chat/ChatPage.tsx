@@ -1,9 +1,9 @@
 import { ChatAssistant } from "@/components/chat/ChatAssistant";
-import { useAuth } from "@/hooks/useAuth";
+
+import { useChatPage } from "./useChatPage";
 
 export default function ChatPage() {
-  const { profile } = useAuth();
-  const userName = profile?.full_name ?? "there";
+  const { userName } = useChatPage();
 
   return (
     <section className="space-y-4">

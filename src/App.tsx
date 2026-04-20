@@ -2,11 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AppLayout } from "@/layouts/UserLayout";
-import LoginPage from "@/pages/LoginPage";
-import ChatPage from "@/pages/ChatPage";
-import AdminDashboard from "@/pages/admin/AdminDashboard";
-import AdminDocuments from "@/pages/admin/AdminDocuments";
-import { AdminUsers } from "@/pages/admin/AdminUsers";
+import LoginPage from "@/pages/Login";
+import ChatPage from "@/pages/Employee/Chat";
+import AdminDashboard from "@/pages/Admin/Dashboard";
+import AdminDocuments from "@/pages/Admin/Documents";
+import { AdminUsers } from "@/pages/Admin/Users";
 
 export default function App() {
   return (

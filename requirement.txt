@@ -1,2 +1,5 @@
 Docling
 Waktu pake docling kadang harus enable setting developer mode di laptop karena Windows tidak mengizinkan membuat symlinks tanpa privilege khusus. HuggingFace mencoba membuat symlink saat download model, tapi gagal.
+
+run ini buat background job 
+python pipeline/process_pending_documents.py

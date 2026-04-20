@@ -13,6 +13,26 @@ The React Compiler is enabled on this template. See [this documentation](https:/
 
 Note: This will impact Vite dev & build performances.
 
+## Document Sync Webhook (Immediate Processing)
+
+To make the Admin "Sync" button process a document immediately (instead of queue-only),
+run the Python webhook service:
+
+```bash
+python -m uvicorn pipeline.sync_webhook:app --host 0.0.0.0 --port 8001
+```
+
+Set these environment variables on the webhook runtime:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_SECRET_KEY`
+- `DOCUMENT_SYNC_WEBHOOK_SECRET`
+
+Then set Supabase function secrets to call this service:
+
+- `DOCUMENT_SYNC_WEBHOOK_URL` (example: `https://your-domain/sync`)
+- `DOCUMENT_SYNC_WEBHOOK_SECRET` (must match webhook server secret)
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:

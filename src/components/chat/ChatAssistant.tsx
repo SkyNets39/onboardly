@@ -283,7 +283,7 @@ export function ChatAssistant({ userName }: ChatAssistantProps) {
               className={cn(
                 "shrink-0 rounded-full",
                 canSubmit
-                  ? "bg-brand-core text-white hover:bg-brand-deep"
+                  ? "bg-primary-400 text-white hover:bg-primary-500 hover:cursor-pointer"
                   : "bg-muted text-muted-foreground",
               )}
               disabled={!canSubmit}
