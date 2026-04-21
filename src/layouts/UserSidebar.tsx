@@ -52,7 +52,7 @@ export function AppSidebar() {
       <SidebarHeader className="  px-4 py-3 h-18 flex flex-row items-center">
         <Link to={homeLink} className="flex items-center">
           <div className="grid flex-1 text-left text-lg leading-tight">
-            <span className="truncate font-bold">OnBoardly</span>
+            <span className="truncate font-semibold">OnBoardly</span>
           </div>
         </Link>
       </SidebarHeader>
@@ -95,8 +95,8 @@ export function AppSidebar() {
           </p>
           <Button
             type="button"
-            variant="ghost"
-            className="mt-2 w-full justify-start"
+            variant="destructive"
+            className="mt-2 w-full justify-start hover:bg-destructive/80 hover:cursor-pointer"
             onClick={() => void signOut()}
           >
             <LogOut className="size-4" />

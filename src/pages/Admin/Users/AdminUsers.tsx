@@ -222,10 +222,7 @@ export function AdminUsers() {
                       {row.is_active ? (
                         <Badge variant="success">Active</Badge>
                       ) : (
-                        <Badge
-                          variant="outline"
-                          className="border-dashed border-muted-foreground/40 bg-muted/40 text-muted-foreground"
-                        >
+                        <Badge variant="error" className="">
                           Inactive
                         </Badge>
                       )}

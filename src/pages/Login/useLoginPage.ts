@@ -33,6 +33,15 @@ export function useLoginPage() {
         return;
       }
 
+      console.log("[auth] signInWithPassword result", {
+        userId: data.user?.id ?? null,
+        email: data.user?.email ?? null,
+        accessToken: data.session?.access_token ?? null,
+        refreshToken: data.session?.refresh_token ?? null,
+        tokenType: data.session?.token_type ?? null,
+        expiresAt: data.session?.expires_at ?? null,
+      });
+
       const userId = data.user?.id;
       if (!userId) {
         setError("User session not found after login.");

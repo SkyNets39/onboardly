@@ -145,4 +145,5 @@
   --success-background: var(--color-success-background);
 
   --radius: 0.5rem;
+  --form-border: var(--color-neutral-300);
 }
