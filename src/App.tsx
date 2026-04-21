@@ -6,7 +6,7 @@ import LoginPage from "@/pages/Login";
 import ChatPage from "@/pages/Employee/Chat";
 import AdminDashboard from "@/pages/Admin/Dashboard";
 import AdminDocuments from "@/pages/Admin/Documents";
-import { AdminUsers } from "@/pages/Admin/Users";
+import AdminUsers from "@/pages/Admin/Users";
 
 export default function App() {
   return (

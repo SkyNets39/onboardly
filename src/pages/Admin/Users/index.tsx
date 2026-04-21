@@ -1,1 +1,1 @@
-export { AdminUsers } from "./AdminUsers";
+export { default } from "./AdminUsers";

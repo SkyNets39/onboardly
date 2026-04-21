@@ -31,7 +31,7 @@ import {
 
 import { useAdminUsers } from "./useAdminUsers";
 
-export function AdminUsers() {
+export default function AdminUsers() {
   const {
     usersQuery,
     updateUserMutation,

@@ -61,7 +61,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Workspace</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="group-data-[collapsible=icon]:items-center">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
@@ -72,7 +72,7 @@ export function AppSidebar() {
                   >
                     <NavLink
                       to={item.to}
-                      className="w-full rounded-md transition-colors"
+                      className="flex h-full w-full items-center rounded-md transition-colors"
                     >
                       <item.icon className="size-4" />
                       <span>{item.label}</span>
