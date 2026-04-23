@@ -217,3 +217,8 @@ On some Windows setups, Hugging Face model downloads may need symlink permission
 - **Document stuck in `processing`**: run worker or webhook service and inspect logs.
 - **`403 Forbidden` in admin actions**: verify `users.role = 'admin'` for your account and company consistency.
 - **Chat returns no context**: ensure chunks exist in `document_chunks` and embedding dimension matches DB vector definition.
+
+## Video Demo
+https://github.com/user-attachments/assets/9c45debb-c10f-4015-9160-5d38893f7ea4
+
+
