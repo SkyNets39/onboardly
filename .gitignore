@@ -39,3 +39,9 @@ dist-ssr
 #python
 __pycache__
 pipeline/venv
+
+
+#claude
+.claude/
+CLAUDE.md
+claude-design/

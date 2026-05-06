@@ -1,24 +1,15 @@
-import { LogOut } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
 
 interface RouteMeta {
   title: string;
-  subtitle?: string;
 }
 
 const ROUTE_META: Record<string, RouteMeta> = {
-  "/chat": {
-    title: "Ask Onboardly",
-    subtitle: "Get instant answers from your company's approved policy docs.",
-  },
-  "/admin": {
-    title: "Admin Workspace",
-    subtitle: "Manage documents and knowledge sources for employee assistance.",
-  },
+  "/chat": { title: "Ask Onboardly" },
+  "/admin": { title: "Admin Workspace" },
 };
 
 function getRouteMeta(pathname: string): RouteMeta {
@@ -37,17 +28,13 @@ export function AppTopbar({ role }: AppTopbarProps) {
 
   return (
     <header
-      className="sticky top-0 z-20 flex h-18 w-full flex-col justify-center border-b border-neutral-border bg-(--navbar) px-6 py-2"
+      className="sticky top-0 z-20 flex h-15 w-full items-center border-b border-neutral-200 bg-(--navbar) px-7"
       data-user-role={role ?? profile?.role ?? "employee"}
     >
       <div className="flex items-center gap-3">
-        <SidebarTrigger className="-ml-1" />
-        <div className="h-5 w-px bg-border" />
-        <div className="flex min-w-0 w-full flex-1 items-center justify-between gap-2">
-          <div className="min-w-0">
-            <h1 className="truncate text-base font-semibold">{title}</h1>
-          </div>
-        </div>
+        <SidebarTrigger className="-ml-1 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-800" />
+        <div className="h-4 w-px bg-neutral-200" />
+        <h1 className="text-[15px] font-semibold tracking-tight text-neutral-800">{title}</h1>
       </div>
     </header>
   );

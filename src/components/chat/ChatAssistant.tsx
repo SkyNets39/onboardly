@@ -9,6 +9,7 @@ import type {
   ChatSource,
 } from "@/components/chat/chat-types";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
 interface ChatAssistantProps {
@@ -17,7 +18,6 @@ interface ChatAssistantProps {
 
 const CHAT_FUNCTION_URL =
   "https://zbsymtyiuylfytztvyec.supabase.co/functions/v1/chat";
-const COMPANY_ID = "060d9407-1746-4f6c-aafe-02d5f3e88891";
 
 /** Single-line visual height (matches previous input). */
 const CHAT_INPUT_MIN_HEIGHT_PX = 40;
@@ -69,9 +69,11 @@ function parseChatFunctionResponse(
 async function askChatFunction({
   prompt,
   sessionId,
+  companyId,
 }: {
   prompt: string;
   sessionId: string;
+  companyId: string;
 }): Promise<ChatFunctionResponse> {
   const response = await fetch(CHAT_FUNCTION_URL, {
     method: "POST",
@@ -81,7 +83,7 @@ async function askChatFunction({
     },
     body: JSON.stringify({
       query: prompt,
-      company_id: COMPANY_ID,
+      company_id: companyId,
       session_id: sessionId,
     }),
   });
@@ -129,6 +131,7 @@ function chatInitialsFromDisplayName(displayName: string): string {
 }
 
 export function ChatAssistant({ userName }: ChatAssistantProps) {
+  const { profile } = useAuth();
   const [draft, setDraft] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -187,6 +190,7 @@ export function ChatAssistant({ userName }: ChatAssistantProps) {
       const response = await askChatFunction({
         prompt,
         sessionId: sessionIdRef.current,
+        companyId: profile?.company_id ?? "",
       });
       setMessages((previous) => [
         ...previous,
@@ -252,7 +256,7 @@ export function ChatAssistant({ userName }: ChatAssistantProps) {
 
         <form
           onSubmit={handleSubmit}
-          className="border border-border border-neutral-border p-3 px-2 rounded-4xl md:p-3 bg-neutral-base"
+          className="border border-border border-neutral-border p-3 px-2 rounded-4xl md:p-3 md:px-3 mx-4 bg-neutral-base"
         >
           <div className="flex items-end gap-2">
             <textarea

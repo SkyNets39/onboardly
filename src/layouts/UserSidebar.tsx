@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -31,8 +30,6 @@ interface NavigationItem {
 
 const EMPLOYEE_NAV_ITEMS: NavigationItem[] = [
   { label: "Chat", to: "/chat", icon: MessageCircle },
-  { label: "Announcement", to: "/announcement", icon: MessageCircle },
-  { label: "Directory", to: "/directory", icon: MessageCircle },
 ];
 
 const ADMIN_NAV_ITEMS: NavigationItem[] = [
@@ -40,6 +37,13 @@ const ADMIN_NAV_ITEMS: NavigationItem[] = [
   { label: "Documents", to: "/admin/documents", icon: FileText },
   { label: "Users", to: "/admin/users", icon: Users },
 ];
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "?";
+  if (parts.length === 1) return (parts[0]![0] ?? "").toUpperCase();
+  return ((parts[0]![0] ?? "") + (parts[parts.length - 1]![0] ?? "")).toUpperCase();
+}
 
 export function AppSidebar() {
   const { profile, isAdmin, signOut } = useAuth();
@@ -49,17 +53,30 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="  px-4 py-3 h-18 flex flex-row items-center">
-        <Link to={homeLink} className="flex items-center">
-          <div className="grid flex-1 text-left text-lg leading-tight">
-            <span className="truncate font-semibold">OnBoardly</span>
+      <SidebarHeader className="h-15 justify-center border-b border-neutral-200 px-3">
+        <Link to={homeLink} className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 text-white shadow-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 4h8a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H6V4z" stroke="white" strokeWidth="2" strokeLinejoin="round" />
+              <circle cx="10" cy="10" r="1.5" fill="white" />
+            </svg>
+          </div>
+          <div className="grid min-w-0 leading-tight group-data-[collapsible=icon]:hidden">
+            <span className="truncate text-[15px] font-bold tracking-tight text-neutral-900">
+              OnBoardly
+            </span>
+            <span className="text-[11px] font-medium text-neutral-500">
+              {isAdmin ? "Admin Console" : "Workspace"}
+            </span>
           </div>
         </Link>
       </SidebarHeader>
 
       <SidebarContent className="px-2 py-3">
         <SidebarGroup>
-          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel className="px-2.5 text-[10.5px] font-bold tracking-[0.08em] uppercase text-neutral-500">
+            {isAdmin ? "Manage" : "Workspace"}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="group-data-[collapsible=icon]:items-center">
               {navigationItems.map((item) => (
@@ -68,7 +85,7 @@ export function AppSidebar() {
                     asChild
                     tooltip={item.label}
                     isActive={location.pathname === item.to}
-                    className="data-[active=true]:bg-brand-sky data-[active=true]:text-brand-deep"
+                    className="text-[13.5px] font-medium text-neutral-700 hover:bg-neutral-100 hover:text-neutral-800 data-[active=true]:bg-primary-50 data-[active=true]:font-semibold data-[active=true]:text-primary-700"
                   >
                     <NavLink
                       to={item.to}
@@ -85,23 +102,27 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border px-3 py-3">
-        <div className="rounded-md border border-sidebar-border p-3">
-          <p className="truncate text-sm font-medium">
-            {profile?.full_name ?? "Employee"}
-          </p>
-          <p className="text-xs text-sidebar-foreground/70">
-            {profile?.role === "admin" ? "HR Admin" : "Employee"}
-          </p>
-          <Button
+      <SidebarFooter className="border-t border-neutral-200 p-3">
+        <div className="flex items-center gap-2.5 rounded-lg p-2 transition-colors hover:bg-neutral-100">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-xs font-semibold text-white">
+            {getInitials(profile?.full_name ?? "")}
+          </div>
+          <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
+            <p className="truncate text-[13px] font-semibold leading-tight text-neutral-800">
+              {profile?.full_name ?? "Employee"}
+            </p>
+            <p className="text-[11px] font-medium leading-tight text-neutral-500">
+              {profile?.role === "admin" ? "HR Admin" : "Employee"}
+            </p>
+          </div>
+          <button
             type="button"
-            variant="destructive"
-            className="mt-2 w-full justify-start hover:bg-destructive/80 hover:cursor-pointer"
             onClick={() => void signOut()}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-neutral-400 transition-colors hover:bg-neutral-200 hover:text-neutral-700 group-data-[collapsible=icon]:hidden"
+            title="Sign out"
           >
-            <LogOut className="size-4" />
-            Sign out
-          </Button>
+            <LogOut className="size-3.5" />
+          </button>
         </div>
       </SidebarFooter>
     </Sidebar>

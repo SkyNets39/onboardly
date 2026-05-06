@@ -1,20 +1,20 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/inter";
+@import "@fontsource-variable/plus-jakarta-sans";
 
 @theme {
-  /* Primary — Trust Blue */
-  --color-primary-50: oklch(96.5% 0.022 250.6);
-  --color-primary-100: oklch(88.2% 0.056 248.4);
-  --color-primary-200: oklch(76.4% 0.108 246.2);
-  --color-primary-300: oklch(63.8% 0.162 244);
-  --color-primary-400: oklch(55.2% 0.196 242.5);
-  --color-primary-500: oklch(47.6% 0.218 241); /* core */
-  --color-primary-600: oklch(39.4% 0.196 239.8);
-  --color-primary-700: oklch(30.8% 0.162 238.6);
-  --color-primary-800: oklch(22% 0.118 237.4);
-  --color-primary-900: oklch(15.4% 0.078 236.2);
+  /* Primary — Confident Indigo */
+  --color-primary-50:  #EEF1FF;
+  --color-primary-100: #DDE3FF;
+  --color-primary-200: #BAC5FF;
+  --color-primary-300: #8E9DFA;
+  --color-primary-400: #6B7BF0;
+  --color-primary-500: #4F5DE0; /* core */
+  --color-primary-600: #3F49C9;
+  --color-primary-700: #2F38A3;
+  --color-primary-800: #232A7E;
+  --color-primary-900: #161B5C;
 
   /* Secondary — Fresh Teal */
   --color-secondary-50: oklch(96.8% 0.03 175.2);
@@ -40,22 +40,26 @@
   --color-accent-800: oklch(30.4% 0.126 277.1);
   --color-accent-900: oklch(20.6% 0.082 277.1);
 
-  /* Neutral */
-  --color-neutral-50: oklch(98.2% 0.004 248); /* subtle — page bg */
-  --color-neutral-100: oklch(95.6% 0.008 248); /* wash — card bg */
-  --color-neutral-200: oklch(90.4% 0.012 248); /* muted bg */
-  --color-neutral-300: oklch(82.8% 0.016 248); /* border-subtle */
-  --color-neutral-400: oklch(72% 0.018 248); /* border */
-  --color-neutral-500: oklch(58.6% 0.02 248); /* placeholder text */
-  --color-neutral-600: oklch(44.2% 0.022 248); /* secondary text */
-  --color-neutral-700: oklch(32.4% 0.022 248); /* body text */
-  --color-neutral-800: oklch(22.6% 0.02 248); /* heading text */
-  --color-neutral-900: oklch(13.8% 0.016 248); /* rich black */
+  /* Neutral — warm-cool slate (ink scale) */
+  --color-neutral-50:  #F9FAFC; /* ink-25  — page bg */
+  --color-neutral-100: #F4F6FA; /* ink-50  — surface-2 */
+  --color-neutral-200: #E5EAF2; /* ink-100 — border */
+  --color-neutral-300: #CBD5E1; /* ink-200 — border-strong */
+  --color-neutral-400: #94A3B8; /* ink-300 — subtle text */
+  --color-neutral-500: #64748B; /* ink-400 */
+  --color-neutral-600: #475569; /* ink-500 */
+  --color-neutral-700: #334155; /* ink-600 — body text */
+  --color-neutral-800: #1F2937; /* ink-700 — heading text */
+  --color-neutral-900: #111827; /* ink-800 — rich black */
+
+  /* Font families */
+  --font-sans: 'Plus Jakarta Sans Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
 
   /* Named aliases */
-  --color-neutral-base: oklch(100% 0 0); /* pure white */
+  --color-neutral-base: #FFFFFF; /* pure white */
   --color-neutral-subtle: var(--color-neutral-50);
-  --color-neutral-border: var(--color-neutral-100);
+  --color-neutral-border: var(--color-neutral-200); /* ink-100 = #E5EAF2 */
   --color-neutral-fore: var(--color-neutral-800);
 
   /* App chrome */
@@ -63,8 +67,8 @@
 
   /* Sidebar (shadcn) */
   --color-sidebar-foreground: var(--color-neutral-fore);
-  --color-sidebar-accent: var(--color-primary-50);
-  --color-sidebar-accent-foreground: var(--color-primary-600);
+  --color-sidebar-accent: var(--color-neutral-100); /* hover = neutral tint, not primary */
+  --color-sidebar-accent-foreground: var(--color-neutral-800);
   --color-sidebar-border: var(--color-neutral-border);
   --color-sidebar-ring: var(--color-primary-500);
 
@@ -118,7 +122,7 @@
   --accent-foreground: var(--color-neutral-base);
 
   --muted: var(--color-primary-50);
-  --muted-foreground: var(--color-neutral-border);
+  --muted-foreground: var(--color-neutral-500);
 
   --border: var(--color-neutral-border);
   --ring: var(--color-primary-500);
@@ -146,4 +150,21 @@
 
   --radius: 0.5rem;
   --form-border: var(--color-neutral-300);
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.10), 0 4px 8px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 24px 56px rgba(15, 23, 42, 0.16);
+
+  /* Transitions */
+  --t-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --t-base: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  --t-slow: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
